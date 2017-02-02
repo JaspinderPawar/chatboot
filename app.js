@@ -21,6 +21,11 @@ app.all('/*', function (req, res, next) {
   }
 });
 
+app.configure(function(){
+  app.set('port', process.env.PORT || 3000);
+  
+});
+
 app.use(function (req, res, next) {
   // res.jsonFail = function(error) {
   //     return res.json({
@@ -71,6 +76,6 @@ io.sockets.on('connection', function (socket) {
 
 
 
-http.listen(3000, () => {
-  console.log('started on port 3000');
+http.listen(app.get('port'), () => {
+  console.log('started on port ' + app.get('port'));
 });
