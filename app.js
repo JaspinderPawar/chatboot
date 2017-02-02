@@ -59,19 +59,56 @@ app.use(function (req, res, next) {
 
 
 let io = require('socket.io')(http);
-var usernames = {};
-var rooms = [];
-var userlist = [];
-io.sockets.on('connection', function (socket) {
-  
- console.log('connect');
-   socket.emit('welcome', { message: 'Welcome!', id: socket.id });
 
-  socket.on('disconnect', function () {
-    console.log('disconnect');
-    // require('./models/user').updateIsOnline(socket.username, false);
-    
-  });
+var userlist = [];
+
+    io.on('connection', function (socket) {
+    console.log("client connected 1")
+    if (socket.handshake.query.id) {
+      var found=false;
+      for(var i = 0; i < userlist.length; i++) {
+          if (userlist[i].socketid == socket.id) {
+              found = true;
+              break;
+          } 
+        }
+        if(!found){
+           console.log(socket.handshake.query.id);
+           var user={id: socket.handshake.query.id,socketid: socket.id};
+           userlist.push(user);
+        }       
+     }
+
+    console.log("client connected")
+     socket.on('pulllist', function () {
+        console.log('test');         
+        io.sockets.emit('getlist', userlist);
+      });
+
+      socket.on('sendmessage', function ( data) {
+       for(var i = 0; i < userlist.length; i++) {
+            if(userlist[i].socketid === data.receiver) {
+               console.log('message sent to' + userlist[i].socketid)
+               io.sockets.connected[userlist[i].socketid].emit('message', {  message: data.message, sender: data.sender, receiver: data.receiver});
+             break;
+            }
+         }      
+     });
+
+      socket.on('disconnect', function() {
+        //var index=userlist.findIndex(x => x.socketid == socket.id);
+         var id = '';
+         for(var i = 0; i < userlist.length; i += 1) {
+            if(userlist[i].socketid === socket.id) {
+              id = userlist[i].id;
+              userlist.splice(i, 1);
+            }
+         }
+           io.sockets.emit('disconnected', id);
+           if (socket.id !== undefined) {      
+              socket.leave(socket.id);
+           }
+      });
 });
 
 
