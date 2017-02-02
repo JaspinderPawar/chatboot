@@ -19,16 +19,15 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.all('/', function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', "*");
+app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
 //io.set('transports', [ 'websocket' ]);
 //io.set('origins', '*:*');
-io.set('origins', 'http://uatwagonex.herokuapp.com:*');
+//io.set('origins', 'http://uatwagonex.herokuapp.com:*');
  var userlist = [];
 
     io.on('connection', function (socket) {
