@@ -20,17 +20,18 @@ app.configure('development', function(){
 });
 
 app.all('/', function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', "*");
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
   next();
 });
 
-//io.set('transports', [ 'websocket' ]);
-io.set('origins', '*:*');
+io.set('transports', [ 'websocket' ]);
+//io.set('origins', '*:*');
  var userlist = [];
 
     io.on('connection', function (socket) {
-   
+    console.log("client connected 1")
     if (socket.handshake.query.id) {
       var found=false;
       for(var i = 0; i < userlist.length; i++) {
