@@ -26,8 +26,9 @@ app.all('/', function(req, res, next) {
   next();
 });
 
-io.set('transports', [ 'websocket' ]);
+//io.set('transports', [ 'websocket' ]);
 //io.set('origins', '*:*');
+io.set('origins', 'http://uatwagonex.herokuapp.com:*');
  var userlist = [];
 
     io.on('connection', function (socket) {
