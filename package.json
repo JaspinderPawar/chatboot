@@ -6,6 +6,7 @@
     "start": "node app"
   },
   "dependencies": {
+    "body-parser": "^1.16.0",
     "express": "3.0.0rc3",
     "jade": "*",
     "socket.io": "^1.7.2"

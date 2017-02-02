@@ -1,86 +1,76 @@
+'use strict';
 
-/**
- * Module dependencies.
- */
+let app = require('express')();
+let http = require('http').Server(app);
 
-var express = require('express') 
-  , http = require('http')
-  , path = require('socket.io');
-   var io = require('socket.io')(require('http').Server(app));
+var bodyParser = require('body-parser');
 
-var app = express();
 
-app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
-  
+app.use(bodyParser.json());
+
+app.all('/*', function (req, res, next) {
+  // CORS headers
+  res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  // Set custom headers for CORS
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+app.use(function (req, res, next) {
+  // res.jsonFail = function(error) {
+  //     return res.json({
+  //         success: false,
+  //         message:error.message,
+  //         result: ''
+  //     })
+  // };
+  res.jsonResult = function (error, data) {
+    return res.json({
+      success: error ? false : true,
+      message: error ? error.message : 'sucess',
+      result: error ? '' : data
+    });
+  };
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:60455");
-  
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
-//io.set('transports', [ 'websocket' ]);
-//io.set('origins', '*:*');
-//io.set('origins', 'http://uatwagonex.herokuapp.com:*');
- var userlist = [];
 
-    io.on('connection', function (socket) {
-    console.log("client connected 1")
-    if (socket.handshake.query.id) {
-      var found=false;
-      for(var i = 0; i < userlist.length; i++) {
-          if (userlist[i].socketid == socket.id) {
-              found = true;
-              break;
-          } 
-        }
-        if(!found){
-           console.log(socket.handshake.query.id);
-           var user={id: socket.handshake.query.id,socketid: socket.id};
-           userlist.push(user);
-        }       
-     }
+//  app.use('/api/wines',require('./routes/api'))
+//  app.use('/api/users',require('./routes/users'))
 
-    console.log("client connected")
-     socket.on('pulllist', function () {
-        console.log('test');         
-        io.sockets.emit('getlist', userlist);
-      });
 
-      socket.on('sendmessage', function ( data) {
-       for(var i = 0; i < userlist.length; i++) {
-            if(userlist[i].socketid === data.receiver) {
-               console.log('message sent to' + userlist[i].socketid)
-               io.sockets.connected[userlist[i].socketid].emit('message', {  message: data.message, sender: data.sender, receiver: data.receiver});
-             break;
-            }
-         }      
-     });
-
-      socket.on('disconnect', function() {
-        //var index=userlist.findIndex(x => x.socketid == socket.id);
-         var id = '';
-         for(var i = 0; i < userlist.length; i += 1) {
-            if(userlist[i].socketid === socket.id) {
-              id = userlist[i].id;
-              userlist.splice(i, 1);
-            }
-         }
-           io.sockets.emit('disconnected', id);
-           if (socket.id !== undefined) {      
-              socket.leave(socket.id);
-           }
-      });
+// If no route is matched by now, it must be a 404
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+
+let io = require('socket.io')(http);
+var usernames = {};
+var rooms = [];
+var userlist = [];
+io.sockets.on('connection', function (socket) {
+  
+ console.log('connect');
+   socket.emit('welcome', { message: 'Welcome!', id: socket.id });
+
+  socket.on('disconnect', function () {
+    console.log('disconnect');
+    // require('./models/user').updateIsOnline(socket.username, false);
+    
+  });
+});
+
+
+
+http.listen(3000, () => {
+  console.log('started on port 3000');
 });
