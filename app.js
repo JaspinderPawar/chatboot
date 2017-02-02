@@ -19,6 +19,12 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
  var userlist = [];
 
     io.on('connection', function (socket) {
