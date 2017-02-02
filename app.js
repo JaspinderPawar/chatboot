@@ -63,6 +63,9 @@ let io = require('socket.io')(http);
 var userlist = [];
 
     io.on('connection', function (socket) {
+
+    socket.emit('welcome', { message: 'Welcome!', id: socket.id });
+
     console.log("client connected 1")
     if (socket.handshake.query.id) {
       var found=false;
@@ -78,7 +81,7 @@ var userlist = [];
            userlist.push(user);
         }       
      }
- socket.emit('welcome', { message: 'Welcome!', id: socket.id }); 
+ 
     console.log("client connected")
      socket.on('pulllist', function () {
         console.log('test');
