@@ -78,10 +78,11 @@ var userlist = [];
            userlist.push(user);
         }       
      }
-
+ socket.emit('welcome', { message: 'Welcome!', id: socket.id }); 
     console.log("client connected")
      socket.on('pulllist', function () {
-        console.log('test');         
+        console.log('test');
+              
         io.sockets.emit('getlist', userlist);
       });
 
