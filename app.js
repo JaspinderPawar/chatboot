@@ -26,7 +26,7 @@ app.all('/', function(req, res, next) {
 });
 
 //io.set('transports', [ 'websocket' ]);
-io.set('origins', '*');
+io.set('origins', '*:*');
  var userlist = [];
 
     io.on('connection', function (socket) {
