@@ -69,7 +69,7 @@ var userlist = [];
        for(var i = 0; i < userlist.length; i++) {
             if(userlist[i].socketid === data.receiver) {
                console.log('message sent to' + userlist[i].socketid)
-               io.sockets.connected[userlist[i].socketid].emit('message', {  message: data.message, sender: data.sender, receiver: data.receiver});
+               io.sockets.connected[userlist[i].socketid].emit('message', data);
              break;
             }
          }      
