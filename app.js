@@ -26,30 +26,6 @@ app.configure(function(){
   
 });
 
-app.use(function (req, res, next) {
-  // res.jsonFail = function(error) {
-  //     return res.json({
-  //         success: false,
-  //         message:error.message,
-  //         result: ''
-  //     })
-  // };
-  res.jsonResult = function (error, data) {
-    return res.json({
-      success: error ? false : true,
-      message: error ? error.message : 'sucess',
-      result: error ? '' : data
-    });
-  };
-
-  next();
-});
-
-
-//  app.use('/api/wines',require('./routes/api'))
-//  app.use('/api/users',require('./routes/users'))
-
-
 // If no route is matched by now, it must be a 404
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
@@ -100,7 +76,6 @@ var userlist = [];
      });
 
       socket.on('disconnect', function() {
-        //var index=userlist.findIndex(x => x.socketid == socket.id);
          var id = '';
          for(var i = 0; i < userlist.length; i += 1) {
             if(userlist[i].socketid === socket.id) {
