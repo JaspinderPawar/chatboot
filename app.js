@@ -27,11 +27,11 @@ app.configure(function(){
 });
 
 // If no route is matched by now, it must be a 404
-app.use(function (req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+// app.use(function (req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
 
 
 let io = require('socket.io')(http);
@@ -67,7 +67,7 @@ var userlist = [];
 
       socket.on('sendmessage', function ( data) {
        for(var i = 0; i < userlist.length; i++) {
-            if(userlist[i].socketid === data.receiver) {
+            if(userlist[i].id === data.receiver) {
                console.log('message sent to' + userlist[i].socketid)
                io.sockets.connected[userlist[i].socketid].emit('message', data);
              break;
