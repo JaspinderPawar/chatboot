@@ -48,7 +48,7 @@ var userlist = [];
       for(var i = 0; i < userlist.length; i++) {
           if (userlist[i].id == socket.handshake.query.id) {
               found = true;
-              userlist[i].id=socket.id;
+              userlist[i].socketid=socket.id;
               break;
           } 
         }
@@ -67,14 +67,14 @@ var userlist = [];
       });
 
       socket.on('sendmessage', function ( data) {
-          io.sockets.emit('message', data);
-      //  for(var i = 0; i < userlist.length; i++) {
-      //       if(userlist[i].id === data.receiver) {
-      //          console.log('message sent to' + userlist[i].socketid)
-      //          io.sockets.connected[userlist[i].socketid].emit('message', data);
-      //        break;
-      //       }
-      //    }      
+        //  io.sockets.emit('message', data);
+       for(var i = 0; i < userlist.length; i++) {
+            if(userlist[i].id === data.receiver) {
+               console.log('message sent to' + userlist[i].socketid)
+               io.sockets.connected[userlist[i].socketid].emit('message', data);
+             break;
+            }
+         }      
      });
 
       socket.on('disconnect', function() {
