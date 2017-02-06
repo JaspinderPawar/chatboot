@@ -21,9 +21,9 @@ app.all('/*', function (req, res, next) {
   }
 });
 
-app.configure(function(){
+app.configure(function () {
   app.set('port', process.env.PORT || 3000);
-  
+
 });
 
 // If no route is matched by now, it must be a 404
@@ -38,58 +38,80 @@ let io = require('socket.io')(http);
 
 var userlist = [];
 
-    io.on('connection', function (socket) {
+io.on('connection', function (socket) {
 
-    socket.emit('welcome', { message: 'Welcome!', id: socket.id });
 
-    console.log("client connected 1")
-    if (socket.handshake.query.id) {
-      var found=false;
-      for(var i = 0; i < userlist.length; i++) {
-          if (userlist[i].id == socket.handshake.query.id) {
-              found = true;
-              userlist[i].socketid=socket.id;
-              break;
-          } 
-        }
-        if(!found){
-           console.log(socket.handshake.query.id);
-           var user={id: socket.handshake.query.id,socketid: socket.id};
-           userlist.push(user);
-        }       
-     }
- 
-    console.log("client connected")
-     socket.on('pulllist', function () {
-        console.log('test');
-              
-        io.sockets.emit('getlist', userlist);
-      });
 
-      socket.on('sendmessage', function ( data) {
-        //  io.sockets.emit('message', data);
-       for(var i = 0; i < userlist.length; i++) {
-            if(userlist[i].id === data.receiver) {
-               console.log('message sent to' + userlist[i].socketid)
-               io.sockets.connected[userlist[i].socketid].emit('message', data);
-             break;
-            }
-         }      
-     });
+  console.log("client connected 1")
+  if (socket.handshake.query.id) {
+    var index = userlist.findIndex(x => x.id === socket.handshake.query.id);
+    if (index >= 0) {
+      userlist[index].socketid = socket.id;
+    }
+    else {
+      var user = { id: socket.handshake.query.id, socketid: socket.id };
+      userlist.push(user);
+    }
+    // var found=false;
+    // for(var i = 0; i < userlist.length; i++) {
+    //     if (userlist[i].id == socket.handshake.query.id) {
+    //         found = true;
+    //         userlist[i].socketid=socket.id;
+    //         break;
+    //     } 
+    //   }
+    //   if(!found){
+    //      console.log(socket.handshake.query.id);
+    //      var user={id: socket.handshake.query.id,socketid: socket.id};
+    //      userlist.push(user);
+    //   }       
+  }
 
-      socket.on('disconnect', function() {
-         var id = '';
-         for(var i = 0; i < userlist.length; i += 1) {
-            if(userlist[i].socketid === socket.id) {
-              id = userlist[i].id;
-              userlist.splice(i, 1);
-            }
-         }
-           io.sockets.emit('disconnected', id);
-           if (socket.id !== undefined) {      
-              socket.leave(socket.id);
-           }
-      });
+  console.log("client connected")
+  socket.on('pulllist', function () {
+    console.log('test');
+
+    io.sockets.emit('getlist', userlist);
+  });
+
+  socket.on('sendmessage', function (data) {
+    //  io.sockets.emit('message', data);
+    var index = userlist.findIndex(x => x.id === data.receiver);
+    if (index >= 0) {
+      io.sockets.connected[userlist[index].socketid].emit('message', data);
+    }
+    //  for(var i = 0; i < userlist.length; i++) {
+    //       if(userlist[i].id === data.receiver) {
+    //          console.log('message sent to' + userlist[i].socketid)
+    //          io.sockets.connected[userlist[i].socketid].emit('message', data);
+    //        break;
+    //       }
+    //    }      
+  });
+
+  socket.on('disconnect', function () {  
+    var index = userlist.findIndex(x => x.socketid === socket.id);
+    if (index >= 0) {
+      var id = userlist[index].id;
+      userlist.splice(index, 1);
+
+      io.sockets.emit('disconnected', id);
+      if (socket.id !== undefined) {
+        socket.leave(socket.id);
+      }
+    }
+    //var id='';
+    //  for(var i = 0; i < userlist.length; i += 1) {
+    //     if(userlist[i].socketid === socket.id) {
+    //       id = userlist[i].id;
+    //       userlist.splice(i, 1);
+    //     }
+    //  }
+    //    io.sockets.emit('disconnected', id);
+    //    if (socket.id !== undefined) {      
+    //       socket.leave(socket.id);
+    //    }
+  });
 });
 
 
