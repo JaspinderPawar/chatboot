@@ -46,8 +46,9 @@ var userlist = [];
     if (socket.handshake.query.id) {
       var found=false;
       for(var i = 0; i < userlist.length; i++) {
-          if (userlist[i].socketid == socket.id) {
+          if (userlist[i].id == socket.handshake.query.id) {
               found = true;
+              userlist[i].id=socket.id;
               break;
           } 
         }
