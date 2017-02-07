@@ -8,22 +8,6 @@ app.use(bodyParser.json());
 var allowedOrigins = '';
 
 // Get env variable
-var origins = process.env.ORIGINS || '';
-if (origins.toString().length > 0) {
-  allowedOrigins = origins.toString().split(",");
-}
-
-app.use(function(req, res, next) { 
-  var origin = req.headers.origin;
-  if(allowedOrigins.indexOf(origin) > -1){
-       res.header('Access-Control-Allow-Origin', origin);
-  }
-  //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
-  return next();
-});
 
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
