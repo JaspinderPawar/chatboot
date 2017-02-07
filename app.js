@@ -16,7 +16,7 @@ if (origins.toString().length > 0) {
 app.all('/*', function (req, res, next) {
   var origin = request.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
-    response.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Origin', origin);
   }
 
   // CORS headers
