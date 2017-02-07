@@ -8,6 +8,29 @@ app.use(bodyParser.json());
 var allowedOrigins = '';
 
 // Get env variable
+var origins = process.env.ORIGINS || '';
+if (origins.toString().length > 0) {
+  allowedOrigins = origins.toString().split(",");
+}
+
+app.use( function (req, res, next) {
+  var origin = req.headers.origin;
+  console.log(origin);
+  if (allowedOrigins.indexOf(origin) > -1) {
+    console.log('origin');
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  // CORS headers
+  //res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  // Set custom headers for CORS
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
+});
 
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
