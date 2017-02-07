@@ -13,22 +13,15 @@ if (origins.toString().length > 0) {
   allowedOrigins = origins.toString().split(",");
 }
 
-app.use(function (req, res, next) {
-  var origin = req.headers.origin;
-  if (allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+app.use(function(req, res, next) {  
+  if(allowedOrigins.indexOf(origin) > -1){
+       res.setHeader('Access-Control-Allow-Origin', origin);
   }
-
-  // CORS headers
-  //res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  // Set custom headers for CORS
-  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
-  if (req.method == 'OPTIONS') {
-    res.status(200).end();
-  } else {
-    next();
-  }
+  //res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8020');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  return next();
 });
 
 app.configure(function () {
