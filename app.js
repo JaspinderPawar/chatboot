@@ -13,7 +13,7 @@ if (origins.toString().length > 0) {
   allowedOrigins = origins.toString().split(",");
 }
 
-app.all('/*', function (req, res, next) {
+app.use(function (req, res, next) {
   var origin = req.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -64,7 +64,6 @@ io.on('connection', function (socket) {
     if (index >= 0) {
       io.sockets.connected[userlist[index].socketid].emit('message', data);
     }
-
   });
 
   //Will be fired when user logouts from screen or close the browser
