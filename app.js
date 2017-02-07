@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 var allowedOrigins = '';
 
 // Get env variable
-var origins = process.env.ORIGINS;
+var origins = process.env.ORIGINS || '';
 if (origins.toString().length > 0) {
   allowedOrigins = origins.toString().split(",");
 }
