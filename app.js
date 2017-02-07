@@ -5,9 +5,22 @@ let http = require('http').Server(app);
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
+var allowedOrigins = '';
+
+// Get env variable
+var origins = process.env.ORIGINS;
+if (origins.toString().length > 0) {
+  allowedOrigins = origins.toString().split(",");
+}
+
 app.all('/*', function (req, res, next) {
+  var origin = request.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    response.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   // CORS headers
-  res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+  //res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   // Set custom headers for CORS
   res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
@@ -35,7 +48,7 @@ io.on('connection', function (socket) {
     else {
       var user = { id: socket.handshake.query.id, socketid: socket.id };
       userlist.push(user);
-    }     
+    }
   }
 
   console.log("client connected")
@@ -45,17 +58,17 @@ io.on('connection', function (socket) {
     io.sockets.emit('getlist', userlist);
   });
 
- //send message to particular user
+  //send message to particular user
   socket.on('sendmessage', function (data) {
     var index = userlist.findIndex(x => x.id === data.receiver);
     if (index >= 0) {
       io.sockets.connected[userlist[index].socketid].emit('message', data);
     }
-      
+
   });
 
   //Will be fired when user logouts from screen or close the browser
-  socket.on('disconnect', function () {  
+  socket.on('disconnect', function () {
     // remove disconnected user from online users array
     var index = userlist.findIndex(x => x.socketid === socket.id);
     if (index >= 0) {
@@ -67,7 +80,7 @@ io.on('connection', function (socket) {
         //notify all users that this user is disconnect now
         socket.leave(socket.id);
       }
-    }   
+    }
   });
 });
 
