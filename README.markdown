@@ -1,9 +1,34 @@
-This is just a sample app to play with:
+This app enables real-time bidirectional event-based communication. It consists in:
 
-* [node.js](http://nodejs.org)
-* [express](http://expressjs.com/) as web server
-* [jade](http://jade-lang.com/) as view engine
-* [jQuery](http://jquery.org) as client side technology 
+* a [Node.js] server(http://nodejs.org)
+* [Socket.IO](http://socket.io/)
+
+## How to use
+
+A standalone build of `socket.io-client` is exposed automatically by the
+socket.io server as `/socket.io/socket.io.js`. Alternatively you can
+serve the file `socket.io.js` or `socket.io.min.js` found in the `dist` folder.
+
+```html
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io('domain',{ query: "parameters" });
+  socket.on('message', function(){});
+  socket.on('event', function(data){});
+  socket.on('disconnect', function(){});
+</script>
+```
+
+### Node.JS (server-side usage)
+
+  Add `socket.io-client` to your `package.json` and then:
+
+  ```js
+  var socket = require('socket.io-client')('http://localhost');
+  socket.on('connect', function(){});
+  socket.on('event', function(data){});
+  socket.on('disconnect', function(){});
+  
 
 Disclaimer
 ----------
