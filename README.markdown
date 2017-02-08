@@ -7,6 +7,7 @@ This app enables real-time bidirectional event-based communication. It consists 
 
 By adding config variables you can allow few domains to access the socket.
 You can add domains in config variable just like following:
+
 `KEY`=`ORIGINS` and  `VALUE`=`mydomain.com:* http://localhost:3000*`
 
 
