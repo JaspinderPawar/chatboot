@@ -13,29 +13,40 @@ if (origins.toString().length > 0) {
   allowedOrigins = origins.toString().split(",");
 }
 
-app.use("/", function (req, res, next) {
   // var origin = req.headers.origin;
   // console.log(origin);
   // if (allowedOrigins.indexOf(origin) > -1) {
   //   console.log('origin');
   //   res.setHeader('Access-Control-Allow-Origin', origin);
   // }
-  // CORS headers
-   console.log('origin');
-  res.header("Access-Control-Allow-Origin", "http://myvit.ae"); // restrict it to the required domain
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  // Set custom headers for CORS
-  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
-  if (req.method == 'OPTIONS') {
-    res.status(200).end();
-  } else {
-    next();
-  }
-});
+
 
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
 });
+http.listen(app.get('port'), () => {
+  console.log('started on port ' + app.get('port'));
+});
+
+app.all('/*',function (req, res, next) {
+ console.log('origin');
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 
 //Start Socket.IO area
 let io = require('socket.io')(http);
@@ -88,6 +99,3 @@ io.on('connection', function (socket) {
 //End Socket.IO area
 
 
-http.listen(app.get('port'), () => {
-  console.log('started on port ' + app.get('port'));
-});
