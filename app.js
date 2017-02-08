@@ -13,15 +13,16 @@ if (origins.toString().length > 0) {
   allowedOrigins = origins.toString().split(",");
 }
 
-app.use( function (req, res, next) {
-  var origin = req.headers.origin;
-  console.log(origin);
-  if (allowedOrigins.indexOf(origin) > -1) {
-    console.log('origin');
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+app.use("/", function (req, res, next) {
+  // var origin = req.headers.origin;
+  // console.log(origin);
+  // if (allowedOrigins.indexOf(origin) > -1) {
+  //   console.log('origin');
+  //   res.setHeader('Access-Control-Allow-Origin', origin);
+  // }
   // CORS headers
-  //res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+   console.log('origin');
+  res.header("Access-Control-Allow-Origin", "http://myvit.ae"); // restrict it to the required domain
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   // Set custom headers for CORS
   res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
