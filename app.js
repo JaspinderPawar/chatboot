@@ -3,14 +3,16 @@
 let app = require('express')();
 let http = require('http').Server(app);
 var bodyParser = require('body-parser');
+var dotenv = require('dotenv');
+dotenv.load();
 app.use(bodyParser.json());
 
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
 });
 
-//Get allowed origins env variable. format shold be (allowedOrigins = "domain* http://localhost:* http://127.0.0.1:*";)
-var allowedOrigins = process.env.ORIGINS || '';
+//Get allowed origins env variable. format shold be (allowedOrigins = "mydomain.com:* http://localhost:* http://127.0.0.1:*";)
+var allowedOrigins = process.env.ORIGINS || 'https://uapchatbootmaster.herokuapp.com*';
 
 //Start Socket.IO area
 let io = require('socket.io')(http, { origins: allowedOrigins });

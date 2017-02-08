@@ -1,7 +1,7 @@
 # nodemon temp file
 .monitor
-
-#node_modules
+.env
+node_modules
 # Geany temp files
 *~
 
