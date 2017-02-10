@@ -2,6 +2,19 @@
 <html>
 <head>
     <title></title>
+    <style>
+        @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+  html {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+}
+        </style>
   <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
       {{!--<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&key=AIzaSyBmnJXavcguoNMIIyPgsgazwVP93nllyjc"></script>--}}
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbbNqU4xz56nFYwigdJma86UXTu6ujPsQ"
@@ -52,13 +65,14 @@
         //Get current address
 
          function getCurrentAddress(location) {
+             
               currgeocoder.geocode({
                   'location': location
 
             }, function(results, status) {
            
                 if (status == google.maps.GeocoderStatus.OK) {
-                    console.log(results[0]);
+                    console.log(results);
                     $("#address").html(results[0].formatted_address);
                 } else {
                     alert('Geocode was not successful for the following reason: ' + status);
