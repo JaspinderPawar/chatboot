@@ -8,22 +8,17 @@
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbbNqU4xz56nFYwigdJma86UXTu6ujPsQ"
   type="text/javascript"></script>
   <script>
-      $(window).bind("orientationchange", function(){
-          alert('orientationchange');
-        var orientation = window.orientation;
-        var new_orientation = (orientation) ? 0 : 180 + orientation;
-        $('body').css({
-            "-webkit-transform": "rotate(" + new_orientation + "deg)"
-    });
-});
+    
 
-$(window).bind("resize", function(){
-     alert('resize');
-    var orientation = window.orientation;
-    var new_orientation = (orientation) ? 0 : 180 + orientation;
-    $('body').css({
-        "-webkit-transform": "rotate(" + new_orientation + "deg)"
-    });
+
+
+$(document).ready(function () {
+  function reorient(e) {
+    var portrait = (window.orientation % 180 == 0);
+    $("body > div").css("-webkit-transform", !portrait ? "rotate(-90deg)" : "");
+  }
+  window.onorientationchange = reorient;
+  window.setTimeout(reorient, 0);
 });
 
   </script>
