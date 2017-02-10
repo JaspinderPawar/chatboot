@@ -9,12 +9,23 @@
   type="text/javascript"></script>
   <script>
       $(window).bind("orientationchange", function(){
+          alert('orientationchange');
         var orientation = window.orientation;
         var new_orientation = (orientation) ? 0 : 180 + orientation;
         $('body').css({
             "-webkit-transform": "rotate(" + new_orientation + "deg)"
     });
 });
+
+$(window).bind("resize", function(){
+     alert('resize');
+    var orientation = window.orientation;
+    var new_orientation = (orientation) ? 0 : 180 + orientation;
+    $('body').css({
+        "-webkit-transform": "rotate(" + new_orientation + "deg)"
+    });
+});
+
   </script>
 </head>
 <body>
