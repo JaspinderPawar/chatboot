@@ -11,6 +11,13 @@ app.configure(function () {
   app.set('port', process.env.PORT || 3000);
 });
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'hbs');
+
+app.get('/', function (req, res) {
+  res.render('index');
+});
+
 //Get allowed origins env variable. format shold be (allowedOrigins = "mydomain.com:* http://localhost:* http://127.0.0.1:*";)
 var allowedOrigins = process.env.ORIGINS || 'https://uapchatbootmaster.herokuapp.com*';
 
